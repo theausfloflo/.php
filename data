@@ -1,0 +1,185 @@
+##########################################################
+Display MySQL BDD into website (auto refresh)
+##########################################################
+
+    <?php
+
+    //Connect to mysql bdd
+      $db_host = 'localhost'; // Server Name
+      $db_user = 'root'; // Username
+      $db_pass = ''; // Password
+      $db_name = 'test'; // Database Name
+
+    //MSG if error	
+
+      $conn = mysqli_connect($db_host, $db_user, $db_pass, $db_name);
+      if (!$conn) {
+        die ('Failed to connect to MySQL: ' . mysqli_connect_error());	
+      }
+
+    //Primary request	
+
+      $sql = 'SELECT * 
+          FROM #table#';
+
+      $query = mysqli_query($conn, $sql);
+
+      if (!$query) {
+        die ('SQL Error: ' . mysqli_error($conn));
+      }
+      ?>
+
+      <?php
+      $page = $_SERVER['PHP_SELF'];
+      $sec = "1";
+    ?>
+
+    <html>
+      <head>
+        <!-- Page Auto Refresh --!>
+        <meta http-equiv="refresh" content="<?php echo $sec?>;URL='<?php echo $page?>'">
+
+          <title>Title Page</title>
+
+          <!-- CSS --!>
+          <style type="text/css">
+            body {
+              font-size: 15px;
+              color: #343d44;
+              font-family: "segoe-ui", "open-sans", tahoma, arial;
+            }
+            p {
+              font-size: 17px;
+            }
+            table {
+
+              font-family: "Lucida Sans Unicode", "Lucida Grande", "Segoe Ui";
+              font-size: 12px;
+            }
+
+            h1 {
+              margin: 25px auto 0;
+              text-align: center;
+              text-transform: uppercase;
+              font-size: 17px;
+            }
+
+            table td {
+              transition: all .5s;
+            }
+
+            /* Table */
+            .data-table {
+              border-collapse: collapse;
+              font-size: 14px;
+              min-width: 537px;
+            }
+
+            .data-table th, 
+            .data-table td {
+              border: 1px solid #e1edff;
+              padding: 5px 17px;
+            }
+            .data-table caption {
+              margin: 7px;
+            }
+
+            /* Table Header */
+            .data-table thead th {
+              background-color: #508abb;
+              color: #FFFFFF;
+              border-color: #6ea1cc !important;
+              text-transform: uppercase;
+            }
+
+            /* Table Body */
+            .data-table tbody td {
+              color: #353535;
+            }
+            .data-table tbody td:first-child,
+            .data-table tbody td:nth-child(4),
+            .data-table tbody td:last-child {
+
+            }
+
+            /* Table Footer */
+            .data-table tfoot th {
+              background-color: #e5f5ff;
+              text-align: right;
+            }
+            .data-table tfoot th:first-child {
+              text-align: left;
+            }
+            .data-table tbody td:empty
+            {
+              background-color: #ffcccc;
+            }
+          </style>
+      </head>
+    <body>
+
+    <p>
+    <!-- Infotel Logo --!>
+    <img src="img/Logo.png" alt="Logo" style="float:left;"></br>
+
+    <?php
+      // Date of the day
+      echo '<b>&nbsp&nbsp&nbsp&nbsp'. date('l d F Y') ."\n";
+      //Week number
+      echo '</br><b>&nbsp&nbsp&nbsp&nbspWeek n°'. date('W') ."\n";
+    ?>  
+    </p>
+      <!-- <h1>Title</h1> --!>
+
+      <table class="data-table">
+        </br>
+        <thead>
+          <tr>
+            <th>#Row1#</th>
+            <th>#Row2#</th>
+            <th>#Row3#</th>
+            <th>#Row4#</th>
+          </tr>
+        </thead>
+        <tbody>
+    <?php
+      //define timezone of the page (bypass timezone pb)
+      date_default_timezone_set( 'Europe/Paris' );
+
+        $var = date('H:i:s:u');
+        //echo '<b>&nbsp&nbsp&nbsp&nbsp'. date('H:i:s:u') ."\n";
+
+        //define data row
+        while ($row = mysqli_fetch_array($query))
+        {
+          //check if time task is passed	
+          if ($row['DoneHour'] > $row['TaskHour'] ) 
+          { 
+              //define $color variable
+              $color = "#fb0303";
+          }
+          //check if time task is in time
+          elseif ($row['DoneHour'] < $row['TaskHour'])
+          { 
+            $color = "#000000";
+          }
+
+          //table of selected informations of database
+          echo '<tr>
+              <td><b>'.$row['#Row1#'].'</b></td>
+              <td style="color:'. $color.'">'.$row['#Row2#'].'</td>
+              <td>'.$row['#Row3#'].'</td>
+              <td>'.$row['#Row4#'].'</td>
+            </tr>';	
+        }		
+    ?>
+        </tbody>
+      </table>
+    </body>
+    </html>
+   
+    
+       
+##########################################################
+
+##########################################################
